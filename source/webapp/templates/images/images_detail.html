@@ -26,22 +26,29 @@
           </div>
         </div>
    </div>
-
-        <div class="container">
-           <div class="card text-center">
-              <div class="card-header">
-                Комментарии
-              </div>
-               {% for comment in comments %}<hr>
-              <div class="card-body">
-                    <p>Автор : {{ comment.author }}</p>
-                    <p>Текст : {{ comment.text }}</p>
-                    <p>Дата : {{ comment.created }}</p>
-
-              </div>
-           {% endfor %}
-            </div>
-       </div>
-
-
+    <div class="container text-center">
+        <p>Комментарий</p>
+        <textarea id="user_text" style="width: 80%"></textarea>
+        <p>
+            <a onclick="commentAdd()" class="btn btn-success text-white" data-image_id="{{ image.id }}" data-author_id="{{ image.author }}" id="comment-add">Добавить</a>
+        </p>
+    </div>
+    <div class="container">
+       <div class="cardcomment text-center">
+          <div class="card-header">
+            Комментарии
+          </div>
+           {% for comment in comments %}
+          <div class="body{{ comment.id }}" >
+                <p>Автор : {{ comment.author }}</p>
+                <p>Текст : {{ comment.text }}</p>
+                <p>Дата : {{ comment.created }}</p>
+          <p>
+              <a  class="btn btn-success text-white" id="editBtn">Редактирование</a>
+              <a onclick="commentDel({{ comment.id }})" class="btn btn-danger text-white" id="delBtn">Удаление</a>
+          </p>
+          </div>
+       {% endfor %}
+        </div>
+    </div>
 {% endblock %}
