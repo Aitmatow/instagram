@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}{{ object.name }}{% endblock %}
+{% block menu %}
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Действия
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'images_edit' object.pk%} ">Редактирование</a>
+            <a class="dropdown-item" href="{% url 'images_delete' object.pk%} ">Удаление</a>
+        </div>
+      </li>
+{% endblock %}
+{% block content %}
+   <div class="container">
+       <div class="card text-center">
+          <div class="card-header">
+            Изображение
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ image.text }}</h5>
+              <img src="{{ image.image.url }}" class="card-img-top mr-auto" style="width: 150px" alt="{{ image.author }} ">
+                <p>Автор : {{ image.author }}</p>
+                <p>Дата : {{ image.created }}</p>
+                <p>Количество лайков : {{ image.likes }}</p>
+          </div>
+        </div>
+   </div>
+
+        <div class="container">
+           <div class="card text-center">
+              <div class="card-header">
+                Комментарии
+              </div>
+               {% for comment in comments %}<hr>
+              <div class="card-body">
+                    <p>Автор : {{ comment.author }}</p>
+                    <p>Текст : {{ comment.text }}</p>
+                    <p>Дата : {{ comment.created }}</p>
+
+              </div>
+           {% endfor %}
+            </div>
+       </div>
+
+
+{% endblock %}

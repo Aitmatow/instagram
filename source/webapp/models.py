@@ -1,8 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-# Create your models here.
-from main import settings
+
 
 
 class Image(models.Model):
@@ -10,7 +9,7 @@ class Image(models.Model):
     text = models.CharField(max_length=200, blank=False, null=False, verbose_name='Описание')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время создания')
     likes = models.IntegerField(default=0, verbose_name='Количество лайков')
-    author = models.ForeignKey(User, on_delete=models.PROTECT, related_name='image_user', verbose_name='Автор')
+    author = models.ForeignKey(User, on_delete=models.PROTECT, related_name='image_user', verbose_name='Автор', null=True)
     users_like = models.ManyToManyField(User, related_name='image_liked', verbose_name='Лайк пользователя')
 
 
