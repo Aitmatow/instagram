@@ -2,8 +2,6 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-
-
 class Image(models.Model):
     image = models.ImageField(upload_to='', blank=False, null=False, verbose_name='Фотография')
     text = models.CharField(max_length=200, blank=False, null=False, verbose_name='Описание')

@@ -33,16 +33,8 @@ class ImageCreate(CreateView):
     model = Image
     fields = ['image', 'text']
     success_url = reverse_lazy('images_list')
-    # form_class = ImageForm
-
-    # def get_form(self, form_class=None):
-    #     form = super(ImageCreate,self).get_form()
-    #     form.fields['author'].queryset = User.objects.filter(username=self.request.user)
-    #     return form
 
     def form_valid(self, form):
-        """If the form is valid, save the associated model."""
-
         Image.objects.create(
             image=form.cleaned_data.get('image'),
             text=form.cleaned_data.get('text'),

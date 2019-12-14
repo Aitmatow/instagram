@@ -1,12 +1,13 @@
 const baseUrl = 'http://localhost:8000/api/v1/';
 
-let addBtn, editBtn, delBtn;
-
+let addBtn, editBtn, delBtn, dislike, like;
 
 function setUpGlobalVars() {
     addBtn = $('#comment-add');
     editBtn = $('#editBtn');
     delBtn = $('#delBtn');
+    dislike = $('#dislike');
+    like = $('#like');
 }
 
 function commentDel(id){
@@ -24,6 +25,7 @@ function commentDel(id){
       }
     });
 }
+
 function commentAdd(){
     console.log(addBtn.attr('data-image_id'));
     let cur_token = getCookie('csrftoken');
@@ -57,6 +59,48 @@ function commentAdd(){
     });
 }
 
+function disLike() {
+    let user = dislike.attr('data-author');
+    let cur_image = dislike.attr('data-image_id');
+    let cur_token = getCookie('csrftoken');
+    console.log(user);
+    $.ajax({
+      type: "POST",
+      url: baseUrl + 'likes/'+ cur_image + '/',
+      data: JSON.stringify({'oper':'dislike', 'user' : user}),
+      dataType: 'json',
+      contentType: 'application/json',
+      headers: {
+         'X-CSRFToken': cur_token
+      },
+      success: function (response) {
+          dislike.replaceWith(like);
+          $('#likes').text(response.like);
+      }
+    });
+}
+
+function Like() {
+
+    let user = like.attr('data-author');
+    let cur_image = like.attr('data-image_id');
+    let cur_token = getCookie('csrftoken');
+    $.ajax({
+      type: "POST",
+      url: baseUrl + 'likes/'+ cur_image + '/',
+      data: JSON.stringify({'oper':'like', 'user' : user}),
+      dataType: 'json',
+      contentType: 'application/json',
+      headers: {
+         'X-CSRFToken': cur_token
+      },
+      success: function (response) {
+        like.replaceWith(dislike);
+        $('#likes').text(response.like);
+      }
+    });
+}
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -73,7 +117,14 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function checkLiked()
+{
+    if($('#liked'));
+
+}
+
 
 $(document).ready(function() {
     setUpGlobalVars();
+    checkLiked()
 });

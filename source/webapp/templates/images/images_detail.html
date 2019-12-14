@@ -22,10 +22,15 @@
               <img src="{{ image.image.url }}" class="card-img-top mr-auto" style="width: 150px" alt="{{ image.author }} ">
                 <p>Автор : {{ image.author }}</p>
                 <p>Дата : {{ image.created }}</p>
-                <p>Количество лайков : {{ image.likes }}</p>
+                Количество лайков :<p id="likes"> {{ image.likes }}</p>
+                {% if user.is_authenticated %}
+                    <a onclick="disLike()" class="btn btn-danger text-white" data-image_id = "{{ image.id }}" data-author="{{ image.author.username }}" id="dislike">Dislike</a>
+                    <a onclick="Like()" class="btn btn-primary text-white" data-image_id = "{{ image.id }}" id="like" data-author="{{ image.author.username }}">Like</a>
+                {% endif %}
           </div>
         </div>
    </div>
+    {% if user.is_authenticated %}
     <div class="container text-center">
         <p>Комментарий</p>
         <textarea id="user_text" style="width: 80%"></textarea>
@@ -33,6 +38,7 @@
             <a onclick="commentAdd()" class="btn btn-success text-white" data-image_id="{{ image.id }}" data-author_id="{{ image.author }}" id="comment-add">Добавить</a>
         </p>
     </div>
+    {% endif %}
     <div class="container">
        <div class="cardcomment text-center">
           <div class="card-header">
