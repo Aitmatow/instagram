@@ -286,6 +286,10 @@ function getQuotes() {
                 textInputEdit.val(item.text);
                 statusEdit.find('option').remove();
                 statusEdit.append(`<option value="approved">Подтверждена</option> <option value="new">Новая</option>`);
+                console.log();
+                if (statusEdit.find('option').attr('value') === item.status) {
+                    statusEdit.find('option').attr('selected', true);
+                }
                 ratingEdit.val(item.rating);
                 logInForm.addClass('d-none');
                 quoteForm.addClass('d-none');
