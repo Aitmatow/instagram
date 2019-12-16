@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block menu %}
+    {% if user.is_authenticated %}
+    <li class="nav-item active">
+            <a class="nav-link" href="{% url 'images_new' %}">Добавить <span class="sr-only">(current)</span></a>
+        </li>
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <h1 class="bg-info text-white text-center">Картинки: </h1>
+    {% csrf_token %}
+    {% if is_paginated %}
+        {% include 'partial/pagination.html' %}
+    {% endif %}
+    {% for image in object_list %}
+        <div class="card mb-3 text-center">
+            <div class="card-header bg-info text-white"> '{{ image.text }}'</div>
+            <div class="card-body">
+                <img src="{{ image.image.url }}" class="card-img-top mr-auto" style="width: 150px" alt="{{ image.author }} ">
+                <p>Автор : {{ image.author }}</p>
+                <p>Дата : {{ image.created }}</p>
+                <p>Количество лайков : {{ image.likes }}</p>
+                <a href="{% url 'images_view' image.pk %}" class="btn btn-info">Открыть</a>
+                <a href="{% url 'images_edit' image.pk %}" class="btn btn-info">Редактировать</a>
+                <a href="{% url 'images_delete' image.pk %}" class="btn btn-info">Удалить</a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+{% block scripts %}
+    <a href="{% url 'images_new' %}" class="button2" tabindex="0">+</a>
+{% endblock %}
