@@ -43,6 +43,7 @@ function logIn(username, password) {
         formModal.modal('hide');
         enterLink.addClass('d-none');
         exitLink.removeClass('d-none');
+        getQuotes();
     }).fail(function(response, status, message) {
         console.log('Could not get token');
         console.log(response.responseText);
@@ -53,8 +54,10 @@ function logOut() {
     request.done(function(data, status, response) {
         console.log('Cleaned token');
         removeToken();
+
         enterLink.removeClass('d-none');
         exitLink.addClass('d-none');
+
     }).fail(function(response, status, message) {
         console.log('Could not clean token');
         console.log(response.responseText);
@@ -110,6 +113,7 @@ function setUpAuth() {
 
     exitLink.on('click', function(event) {
         event.preventDefault();
+        getQuotes();
         logOut();
     });
 }
@@ -117,7 +121,7 @@ function setUpAuth() {
 function setUpNewQuote() {
     quoteForm.on('submit', function(event) {
         event.preventDefault();
-        createQuote(authorInput.val(), textInput.val(), emailInput.val());
+        createQuote( textInput.val(),authorInput.val(), emailInput.val());
         getQuotes();
     });
 
@@ -152,6 +156,7 @@ function createQuote(text, author_name, author_email) {
     request.done(function (data, status, response) {
         console.log('Цитата добавлена');
         formModal.modal('hide');
+        getQuotes();
     }).fail(function(response, status, message) {
         console.log('Could not add quote');
         console.log(response.responseText);
@@ -183,7 +188,7 @@ function delQuote(id) {
 }
 
 function rateUp(id) {
-    let request = makeRequest('quote/' + id + '/rate_up', 'post', false);
+    let request = makeRequest('quote/' + id + '/rate_up', 'post', true);
     request.done(function(data, status, response) {
         console.log('Rated up quote with id ' + id + '.');
         $('#rating_' + id).text(data.rating);
@@ -194,7 +199,7 @@ function rateUp(id) {
 }
 
 function rateDown(id) {
-    let request = makeRequest('quote/' + id + '/rate_down', 'post', false);
+    let request = makeRequest('quote/' + id + '/rate_down', 'post', true);
     request.done(function(data, status, response) {
         console.log('Rated down quote with id ' + id + '.');
         $('#rating_' + id).text(data.rating);
@@ -230,11 +235,12 @@ function getDetailQuote(id) {
 }
 
 function getQuotes() {
-    let request = makeRequest('quote', 'get', false);
+    let request = makeRequest('quote', 'get', true);
     request.done(function(data, status, response) {
         console.log(data);
         content.empty();
         data.forEach(function(item, index, array) {
+            let date = new Date(Date.parse(item.created_at)).toLocaleString();
             content.append($(`
                 <div class="card text-center" id="quote_${item.id}">
                   <div class="card-header"> 
@@ -242,6 +248,7 @@ function getQuotes() {
                   </div>
                   <div class="card-body">
                     <p>${item.text}</p>
+                    <p>Дата добавления: ${date}</p>
                     <label>Рейтинг:<p id="rating_${item.id}">${item.rating}</p> </label>
                     <p><a href="#" class="btn btn-success" id="rate_up_${item.id}">+</a>
                     <a href="#" class="btn btn-danger" id="rate_down_${item.id}">-</a></p>                    
@@ -277,7 +284,8 @@ function getQuotes() {
             $('#edit_quote_' + item.id).on('click', function(event) {
                 event.preventDefault();
                 textInputEdit.val(item.text);
-                statusEdit.add(`<option>${item.status}</option>`);
+                statusEdit.find('option').remove();
+                statusEdit.append(`<option value="approved">Подтверждена</option> <option value="new">Новая</option>`);
                 ratingEdit.val(item.rating);
                 logInForm.addClass('d-none');
                 quoteForm.addClass('d-none');
